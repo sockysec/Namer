@@ -1,11 +1,9 @@
 import itertools
 import os
 
-def generate_permutations(first_name, middle_name, last_name, birth_year):
-    permutations = []
 
-    # Common permutations
-    permutations.extend([
+def generate_permutations(first_name, middle_name, last_name, birth_year):
+    permutations = [
         f"{first_name}{last_name}",
         f"{first_name}.{last_name}",
         f"{first_name}-{last_name}",
@@ -13,8 +11,8 @@ def generate_permutations(first_name, middle_name, last_name, birth_year):
         f"{last_name}{first_name}",
         f"{last_name}.{first_name}",
         f"{last_name}-{first_name}",
-        f"{last_name}_{first_name}"
-    ])
+        f"{last_name}_{first_name}",
+    ]
 
     if birth_year:
         permutations.extend([
@@ -53,9 +51,13 @@ def generate_permutations(first_name, middle_name, last_name, birth_year):
 
     return permutations
 
+
 def generate_emails(usernames, domains):
-    emails = [f"{username}@{domain}" for username, domain in itertools.product(usernames, domains)]
-    return emails
+    return [
+        f"{username}@{domain}"
+        for username, domain in itertools.product(usernames, domains)
+    ]
+
 
 def print_intro():
     intro = """
@@ -69,6 +71,7 @@ def print_intro():
   This tool is designed to be paired with username enumeration tools.
     """
     print(intro)
+
 
 def main():
     print_intro()
@@ -90,28 +93,32 @@ def main():
         emails_output_filename = f"possible_emails_{count}.txt"
         count += 1
 
-    with open(usernames_output_filename, "w") as usernames_file, open(emails_output_filename, "w") as emails_file:
-        usernames_file.write("Common Permutations:\n")
-        emails_file.write("Possible Emails:\n")
-
-        for username in permutations:
-            usernames_file.write(username + "\n")
-
-        common_domains = [
-            "gmail.com",
-            "outlook.com",
-            "yahoo.com",
-            "hotmail.com"
-            "aol.com",
-            "icloud.com",
-            "yandex.com",
-            "protonmail.com"
-        ]
-        emails = generate_emails(permutations, common_domains)
-        for email in emails:
-            emails_file.write(email + "\n")
-
+    with (open(usernames_output_filename, "w") as usernames_file, open(emails_output_filename, "w") as emails_file):
+        generate_usernames_and_emails(usernames_file, emails_file, permutations)
     print(f"Results saved to '{usernames_output_filename}' and '{emails_output_filename}'")
-    
+
+
+def generate_usernames_and_emails(usernames_file, emails_file, permutations):
+    usernames_file.write("Common Permutations:\n")
+    emails_file.write("Possible Emails:\n")
+
+    for username in permutations:
+        usernames_file.write(username + "\n")
+
+    common_domains = [
+        "gmail.com",
+        "outlook.com",
+        "yahoo.com",
+        "hotmail.com"
+        "aol.com",
+        "icloud.com",
+        "yandex.com",
+        "protonmail.com"
+    ]
+    emails = generate_emails(permutations, common_domains)
+    for email in emails:
+        emails_file.write(email + "\n")
+
+
 if __name__ == "__main__":
     main()
